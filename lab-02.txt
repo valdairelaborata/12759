@@ -1,0 +1,4 @@
+#lab-01
+Continuar na API o CRUD de contatos (codigo, nome, endereco, telefone) e armazenar em arquivo json(contatos.json):
+    1 - Não permitir salvar mais de um contato com o mesmo codigo
+    2 - Devolver mensagem caso o registro a ser alterado ou excluido não existir
