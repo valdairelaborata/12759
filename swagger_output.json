@@ -13,7 +13,10 @@
   "paths": {
     "/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Root"
+        ],
+        "description": "Root",
         "parameters": [],
         "responses": {
           "200": {
@@ -24,7 +27,10 @@
     },
     "/produtos": {
       "get": {
-        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "description": "Buscar produtos",
         "parameters": [
           {
             "name": "codigo",
@@ -39,7 +45,10 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "description": "Incluir um produto",
         "parameters": [
           {
             "name": "body",
@@ -63,7 +72,10 @@
     },
     "/produtos/{codigo}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "description": "Buscar produto pelo código",
         "parameters": [
           {
             "name": "codigo",
@@ -79,7 +91,10 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "description": "Alterar um produto",
         "parameters": [
           {
             "name": "codigo",
@@ -107,7 +122,31 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Produtos"
+        ],
+        "description": "Excluir um produto",
+        "parameters": [
+          {
+            "name": "codigo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/categorias/{codigo}": {
+      "delete": {
+        "tags": [
+          "Categorias"
+        ],
+        "description": "Buscar categorias",
         "parameters": [
           {
             "name": "codigo",
