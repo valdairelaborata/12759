@@ -50,6 +50,10 @@ app.put('/produtos/:codigo', function (req, res) {
     var produtos = listarProdutos()
     var produto = req.body
 
+    if(req.body.codigo !== req.params.codigo){
+        res.status(406).send('Não é possível alterar um produto com o código !== !!!')
+    }
+
     var produtosExistentes = produtos.filter(x => x.codigo != req.params.codigo)
     produtosExistentes.push(produto)
 
@@ -94,7 +98,5 @@ const listarProdutos = () => {
 
     return JSON.parse(produtos)
 }
-
-
 
 app.listen(3000)
