@@ -9,6 +9,9 @@ const swaggerDocument = require('./swagger_output.json');
 
 app.use(express.json())
 
+app.use('/arquivos', express.static('public'))
+
+
 app.get('/', function (req, res) {
     // #swagger.tags = ['Root']   
     // #swagger.description = 'Root'
@@ -50,7 +53,7 @@ app.put('/produtos/:codigo', function (req, res) {
     var produtos = listarProdutos()
     var produto = req.body
 
-    if(req.body.codigo !== req.params.codigo){
+    if (req.body.codigo !== req.params.codigo) {
         res.status(406).send('Não é possível alterar um produto com o código !== !!!')
     }
 
@@ -66,10 +69,10 @@ app.delete('/produtos/:codigo', function (req, res) {
     // #swagger.tags = ['Produtos']   
     // #swagger.description = 'Excluir um produto'
 
-    
-    var produtos = listarProdutos()  
+
+    var produtos = listarProdutos()
     var produtosExistentes = produtos.filter(x => x.codigo != req.params.codigo)
-  
+
     gerenciarProdutos(produtosExistentes)
 
     res.status(202).send('Produto ' + req.params.codigo + ' excluído com sucesso!!!')
