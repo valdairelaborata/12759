@@ -2,13 +2,33 @@ const express = require('express')
 const fs = require('fs')
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://user001:123@cluster0.uqa1irq.mongodb.net/?retryWrites=true&w=majority')
-
+var Produtos = require('./models/produtos')
 
 const app = express()
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger_output.json');
+
+
+const url = 'mongodb+srv://user001:123@cluster0.uqa1irq.mongodb.net/?retryWrites=true&w=majority'
+
+const options = {}
+
+mongoose.connect(url, options)
+//mongoose.set('useCreateIndex', true)
+
+mongoose.connection.on('error', (erro) => {
+    console.log('Erro ao conectar no banco: ' + erro)
+})
+
+mongoose.connection.on('connected', () => {
+    console.log('Conectado com o banco!!')
+})
+
+mongoose.connection.on('disconnected', () => {
+    console.log('Desconectado!!!')
+})
+
 
 app.use(express.json())
 
@@ -22,13 +42,13 @@ app.get('/', function (req, res) {
 })
 
 //CRUD
-app.get('/produtos', function (req, res) {
+app.get('/fs/produtos', function (req, res) {
     // #swagger.tags = ['Produtos']   
     // #swagger.description = 'Buscar produtos'
     res.status(200).send(listarProdutos())
 })
 
-app.get('/produtos/:codigo', function (req, res) {
+app.get('/fs/produtos/:codigo', function (req, res) {
     // #swagger.tags = ['Produtos']   
     // #swagger.description = 'Buscar produto pelo código'
 
@@ -36,7 +56,87 @@ app.get('/produtos/:codigo', function (req, res) {
     res.status(200).send(produto)
 })
 
+
 app.post('/produtos', function (req, res) {
+    // #swagger.tags = ['Produtos']   
+    // #swagger.description = 'Incluir um produto'
+
+    console.log(req.body)
+
+    Produtos.create(req.body, (err, data) => {
+        if (!err) {
+            res.status(201).send('Registro do produto ' + req.body.nome + ' incluído com sucesso!!!')
+        }
+        else {
+            console.log(err)
+            res.status(500).send('Ocorreu um problema ao tentar salvar o produto!!! Erro:' + err)
+        }
+    })
+
+})
+
+
+//CRUD
+app.get('/produtos', function (req, res) {
+    // #swagger.tags = ['Produtos']   
+    // #swagger.description = 'Buscar produtos'
+
+    Produtos.find({}, (err, data) => {
+        res.status(200).send(data)
+    })
+
+})
+
+app.get('/produtos/:codigo', function (req, res) {
+    // #swagger.tags = ['Produtos']   
+    // #swagger.description = 'Buscar produto pelo código'
+
+    var codigo = req.params.codigo
+
+    Produtos.findOne({ codigo }, (err, data) => {
+        res.status(200).send(data)
+    })
+})
+
+app.put('/produtos/:codigo', function (req, res) {
+    // #swagger.tags = ['Produtos']   
+    // #swagger.description = 'Alterar um produto'
+
+    var codigo = req.params.codigo
+
+    Produtos.findOneAndUpdate({ codigo }, { $set: req.body }, (err, data) => {
+        if (!err) {
+            res.status(200).send('Produto ' + req.body.nome + ' alterado com sucesso!!!')
+        }
+        else {
+            console.log(err)
+            res.status(500).send('Ocorreu um problema ao tentar alterar o produto!!! Erro:')
+        }
+    })
+})
+
+
+app.delete('/produtos/:codigo', function (req, res) {
+    // #swagger.tags = ['Produtos']   
+    // #swagger.description = 'Excluir um produto'
+
+
+    var codigo = req.params.codigo
+
+    Produtos.findOneAndDelete({ codigo }, (err, data) => {
+        if (!err) {
+            res.status(202).send('Produto ' + req.params.codigo + ' excluído com sucesso!!!')
+        }
+        else {
+            console.log(err)
+            res.status(500).send('Ocorreu um problema ao tentar excluir o produto!!!')
+        }
+    })
+
+
+})
+
+app.post('/fs/produtos', function (req, res) {
     // #swagger.tags = ['Produtos']   
     // #swagger.description = 'Incluir um produto'
 
@@ -49,7 +149,7 @@ app.post('/produtos', function (req, res) {
     res.status(201).send('Registro do produto ' + req.body.nome + ' incluído com sucesso!!!')
 })
 
-app.put('/produtos/:codigo', function (req, res) {
+app.put('/fs/produtos/:codigo', function (req, res) {
     // #swagger.tags = ['Produtos']   
     // #swagger.description = 'Alterar um produto'
 
@@ -68,7 +168,7 @@ app.put('/produtos/:codigo', function (req, res) {
     res.status(200).send('Produto ' + req.body.nome + ' alterado com sucesso!!!')
 })
 
-app.delete('/produtos/:codigo', function (req, res) {
+app.delete('/fs/produtos/:codigo', function (req, res) {
     // #swagger.tags = ['Produtos']   
     // #swagger.description = 'Excluir um produto'
 
