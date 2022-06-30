@@ -1,12 +1,1 @@
-[
-    {
-        "codigo": "xpto022",
-        "nome": "Nome-010",
-        "descricao": "Endereço - 10 alterado"
-    },
-    {
-        "codigo": "xpto023",
-        "nome": "Nome-010 alterado",
-        "descricao": "Endereço - 10 alteradosdsdfsdfsdfsd"
-    }
-]
+[{"codigo":"xpto022","nome":"Nome-010","descricao":"Endereço - 10 alterado"},{"codigo":"xpto023","nome":"Nome-010 alterado","descricao":"Endereço - 10 alteradosdsdfsdfsdfsd"},{"codigo":"xpto004","nome":"xxxxxxxxxxxxxxxxxxxx","descricao":"Teste"}]

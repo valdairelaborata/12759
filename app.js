@@ -2,7 +2,9 @@ const express = require('express')
 const fs = require('fs')
 const mongoose = require('mongoose')
 
-var Produtos = require('./models/produtos')
+
+
+var routeProdutos = require('./routes/produtos') 
 
 const app = express()
 
@@ -57,6 +59,60 @@ app.get('/fs/produtos/:codigo', function (req, res) {
 })
 
 
+
+app.post('/fs/produtos', function (req, res) {
+    // #swagger.tags = ['Produtos']   
+    // #swagger.description = 'Incluir um produto'
+
+    var produtos = listarProdutos()
+    var produto = req.body
+    produtos.push(produto)
+
+    gerenciarProdutos(produtos)
+
+    res.status(201).send('Registro do produto ' + req.body.nome + ' incluído com sucesso!!!')
+})
+
+app.put('/fs/produtos/:codigo', function (req, res) {
+    // #swagger.tags = ['Produtos']   
+    // #swagger.description = 'Alterar um produto'
+
+    var produtos = listarProdutos()
+    var produto = req.body
+
+    if (req.body.codigo !== req.params.codigo) {
+        res.status(406).send('Não é possível alterar um produto com o código !== !!!')
+    }
+
+    var produtosExistentes = produtos.filter(x => x.codigo != req.params.codigo)
+    produtosExistentes.push(produto)
+
+    gerenciarProdutos(produtosExistentes)
+
+    res.status(200).send('Produto ' + req.body.nome + ' alterado com sucesso!!!')
+})
+
+app.delete('/fs/produtos/:codigo', function (req, res) {
+    // #swagger.tags = ['Produtos']   
+    // #swagger.description = 'Excluir um produto'
+
+
+    var produtos = listarProdutos()
+    var produtosExistentes = produtos.filter(x => x.codigo != req.params.codigo)
+
+    gerenciarProdutos(produtosExistentes)
+
+    res.status(202).send('Produto ' + req.params.codigo + ' excluído com sucesso!!!')
+})
+
+app.delete('/categorias/:codigo', function (req, res) {
+    // #swagger.tags = ['Categorias']   
+    // #swagger.description = 'Buscar categorias'
+    res.send('Tudo ok para excluir o produto ' + req.params.codigo + '!!!')
+})
+
+
+/*
 app.post('/produtos', function (req, res) {
     // #swagger.tags = ['Produtos']   
     // #swagger.description = 'Incluir um produto'
@@ -136,57 +192,10 @@ app.delete('/produtos/:codigo', function (req, res) {
 
 })
 
-app.post('/fs/produtos', function (req, res) {
-    // #swagger.tags = ['Produtos']   
-    // #swagger.description = 'Incluir um produto'
-
-    var produtos = listarProdutos()
-    var produto = req.body
-    produtos.push(produto)
-
-    gerenciarProdutos(produtos)
-
-    res.status(201).send('Registro do produto ' + req.body.nome + ' incluído com sucesso!!!')
-})
-
-app.put('/fs/produtos/:codigo', function (req, res) {
-    // #swagger.tags = ['Produtos']   
-    // #swagger.description = 'Alterar um produto'
-
-    var produtos = listarProdutos()
-    var produto = req.body
-
-    if (req.body.codigo !== req.params.codigo) {
-        res.status(406).send('Não é possível alterar um produto com o código !== !!!')
-    }
-
-    var produtosExistentes = produtos.filter(x => x.codigo != req.params.codigo)
-    produtosExistentes.push(produto)
-
-    gerenciarProdutos(produtosExistentes)
-
-    res.status(200).send('Produto ' + req.body.nome + ' alterado com sucesso!!!')
-})
-
-app.delete('/fs/produtos/:codigo', function (req, res) {
-    // #swagger.tags = ['Produtos']   
-    // #swagger.description = 'Excluir um produto'
+*/
 
 
-    var produtos = listarProdutos()
-    var produtosExistentes = produtos.filter(x => x.codigo != req.params.codigo)
-
-    gerenciarProdutos(produtosExistentes)
-
-    res.status(202).send('Produto ' + req.params.codigo + ' excluído com sucesso!!!')
-})
-
-app.delete('/categorias/:codigo', function (req, res) {
-    // #swagger.tags = ['Categorias']   
-    // #swagger.description = 'Buscar categorias'
-    res.send('Tudo ok para excluir o produto ' + req.params.codigo + '!!!')
-})
-
+app.use('/produtos', routeProdutos)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
