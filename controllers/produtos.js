@@ -26,8 +26,17 @@ exports.listar = (req, res) => {
     // #swagger.description = 'Buscar produtos'
 
     Produtos.find({}, (err, data) => {
-         res.status(200).send(data)
-     })
- 
-   
+        res.status(200).send(data)
+    })
+}
+
+exports.buscar = (req, res) => {
+    // #swagger.tags = ['Produtos']   
+    // #swagger.description = 'Buscar produto pelo código'
+
+    var codigo = req.params.codigo
+
+    Produtos.findOne({ codigo }, (err, data) => {
+        res.status(200).send(data)
+    })
 }

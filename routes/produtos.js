@@ -7,7 +7,7 @@ var controller = require('../controllers/produtos')
 
 router.post('/', controller.incluir)
 router.get('/', controller.listar)
-
+router.get('/:codigo', controller.buscar)
 
 
 module.exports = router
