@@ -3,8 +3,10 @@ const fs = require('fs')
 const mongoose = require('mongoose')
 
 
-
+var routeUsuarios = require('./routes/usuario') 
 var routeProdutos = require('./routes/produtos') 
+var middlewares  = require('./middlewares/middlewares')
+
 
 const app = express()
 
@@ -35,6 +37,8 @@ mongoose.connection.on('disconnected', () => {
 app.use(express.json())
 
 app.use('/arquivos', express.static('public'))
+
+app.use(middlewares.request)
 
 
 app.get('/', function (req, res) {
@@ -110,7 +114,12 @@ app.delete('/categorias/:codigo', function (req, res) {
     res.send('Tudo ok para excluir o produto ' + req.params.codigo + '!!!')
 })
 
-app.use('/produtos', routeProdutos)
+
+
+
+app.use('/usuarios', routeUsuarios)
+
+app.use('/produtos', middlewares.autenticacao, routeProdutos)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
