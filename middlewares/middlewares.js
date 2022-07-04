@@ -1,5 +1,5 @@
 
-
+var jwt = require('jsonwebtoken')
 
 exports.request = (req, res, next) => {
 
@@ -11,6 +11,19 @@ exports.request = (req, res, next) => {
 exports.autenticacao = (req, res, next) => {
 
     var token = req.headers.auth;
+    console.log(token)
 
-    return res.status(500).send(token);
+    jwt.verify(token, '12759', (err, decoded) => {
+        if (err) {
+            console.log(err)
+            return res.status(403).send('Acesso inválido!!!')
+        }
+        else {
+            console.log(decoded)
+            next()
+        }
+    })
+
+
+    /*  return res.status(500).send(token);*/
 }
