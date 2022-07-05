@@ -121,6 +121,7 @@ app.delete('/categorias/:codigo', function (req, res) {
 
 app.use('/usuarios', routeUsuarios)
 
+
 app.use('/produtos', middlewares.autenticacao, routeProdutos)
 
 app.use('/prd', routeProdutos)
