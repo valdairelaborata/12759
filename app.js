@@ -1,7 +1,7 @@
 const express = require('express')
 const fs = require('fs')
 const mongoose = require('mongoose')
-
+var cors = require('cors')
 
 var routeUsuarios = require('./routes/usuario') 
 var routeProdutos = require('./routes/produtos') 
@@ -33,6 +33,8 @@ mongoose.connection.on('disconnected', () => {
     console.log('Desconectado!!!')
 })
 
+
+app.use(cors())
 
 app.use(express.json())
 
@@ -120,6 +122,8 @@ app.delete('/categorias/:codigo', function (req, res) {
 app.use('/usuarios', routeUsuarios)
 
 app.use('/produtos', middlewares.autenticacao, routeProdutos)
+
+app.use('/prd', routeProdutos)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
